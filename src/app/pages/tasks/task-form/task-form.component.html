@@ -1,0 +1,55 @@
+
+<mat-card class="task-form-card">
+  <mat-card-title class="card-title">
+  <div class="title-left">
+    <button mat-icon-button color="primary" [routerLink]="['/tasks']" aria-label="Retour aux tâches">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  </div>
+  <div class="title-center">
+    <mat-icon>note_add</mat-icon>
+    Create an item
+  </div>
+</mat-card-title>
+
+
+  <mat-card-content>
+    <form (ngSubmit)="submit()" class="task-form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Name</mat-label>
+        <input matInput [(ngModel)]="name" name="name" required />
+      </mat-form-field>
+
+      <mat-checkbox [(ngModel)]="isFolder" name="isFolder" color="primary">
+        <span class="checkbox-label">
+          <mat-icon>folder</mat-icon>
+          Is a folder
+        </span>
+      </mat-checkbox>
+
+
+      <div class="form-actions">
+        <button mat-raised-button color="primary" type="submit">
+          <mat-icon>check_circle</mat-icon>
+          Add
+        </button>
+      </div>
+    </form>
+
+    <mat-divider></mat-divider>
+
+    <div class="upload-section">
+      <label class="upload-label">
+        <mat-icon>upload_file</mat-icon>
+        Uploading files
+      </label>
+
+      <input type="file" multiple (change)="uploadFiles($event)" />
+
+      <div class="drop-zone" (drop)="handleDrop($event)" (dragover)="allowDrop($event)">
+        <mat-icon color="primary">cloud_upload</mat-icon>
+        Drag your files here
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,34 @@
+<div class="task-wrapper">
+    <mat-toolbar color="primary" class="task-toolbar">
+        <span class="toolbar-title">
+            <mat-icon>folder</mat-icon>
+            File Manager
+        </span>
+        <span class="spacer"></span>
+        <button mat-raised-button [routerLink]="['/tasks/new']" [queryParams]="{ parentId: parentId }">
+            <mat-icon>add</mat-icon>
+            Add a task </button>
+        <span class="task-count">({{ tasks.length }} Task)</span>
+    </mat-toolbar>
+
+    <mat-card class="task-card" *ngFor="let item of tasks">
+        <mat-card-title>
+            <p *ngIf="item.folder">📁 Folder</p>
+            <p *ngIf="!item.folder">📄 File</p>
+        </mat-card-title>
+        <mat-card-content>
+            {{ item.name }}
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-icon-button (click)="renameItem(item)">
+                <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button (click)="moveItem(item)">
+                <mat-icon>drive_file_move</mat-icon>
+            </button>
+            <button mat-icon-button (click)="deleteItem(item.id)">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </mat-card-actions>
+    </mat-card>
+</div>

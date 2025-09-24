@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 @Component({
 	selector: 'ic-root',
-	imports: [],
-	templateUrl: './app.component.html',
+    standalone: true,
+	imports: [RouterModule],
+	template: `<router-outlet></router-outlet>`,
 	styleUrl: './app.component.scss',
 })
 export class AppComponent {}

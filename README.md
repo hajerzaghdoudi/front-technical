@@ -34,7 +34,7 @@ We suggest you don't spend too much time on your UI, we know how time intensive 
 
 If you have some time left and want to go a little bit further, here are some feature ideas you can add to this app:
 
-- Login page
+- Login page (email = 'front-technical@test.com' && password = "Technical_front**test")
 - Navigate inside folders
 - Use routing for navigation
 - Rename a file or folder
@@ -59,3 +59,4 @@ npm start
 The quickest way to submit your work is by [forking](https://github.com/ictechlab/front-technical-test/fork) this repository, then sending us a Pull Request after you're done.
 
 Alternatively, you can copy this repository to your personal space, and send us a link to your branch (if you make your repo private, you'll need to [invite us as collaborators](https://help.github.com/en/articles/inviting-collaborators-to-a-personal-repository)).
+

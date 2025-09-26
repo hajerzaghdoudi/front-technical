@@ -1,55 +1,47 @@
-
-<mat-card class="task-form-card">
-  <mat-card-title class="card-title">
-  <div class="title-left">
-    <button mat-icon-button color="primary" [routerLink]="['/tasks']" aria-label="Retour aux tâches">
-      <mat-icon>arrow_back</mat-icon>
-    </button>
-  </div>
-  <div class="title-center">
-    <mat-icon>note_add</mat-icon>
-    Create an item
-  </div>
-</mat-card-title>
+<div class="card-wrapper">
+  <mat-card class="card">
+    <mat-card-title class="title"> <mat-icon color="primary" (click)="router.navigate(['/tasks'])">arrow_back</mat-icon>
+      Create a new folder</mat-card-title>
+    <mat-card-content class="upload">
 
 
-  <mat-card-content>
-    <form (ngSubmit)="submit()" class="task-form">
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Name</mat-label>
-        <input matInput [(ngModel)]="name" name="name" required />
+
+        <mat-label>
+          Name
+        </mat-label>
+        <input matInput [(ngModel)]="folderName" />
       </mat-form-field>
 
-      <mat-checkbox [(ngModel)]="isFolder" name="isFolder" color="primary">
-        <span class="checkbox-label">
-          <mat-icon>folder</mat-icon>
-          Is a folder
-        </span>
-      </mat-checkbox>
+      <ic-file-upload-zone (filesSelected)="onFilesReceived($event)"></ic-file-upload-zone>
+      <div *ngIf="selectedFiles.length > 0" class="file-preview list">
+        <p>{{ selectedFiles.length }} selected file(s):</p>
+        <div class="list-container">
+          <mat-list>
+            <mat-list-item *ngFor="let file of selectedFiles; let index = index" class="list">
+              <div class="list-row">
+                <div class="file-name">{{ file.name }} - {{ file.size }} octets</div>
+                <button mat-icon-button (click)="deleteFile(index)" matTooltip="Supprimer">
+                  <mat-icon color="warn">delete</mat-icon>
+                </button>
+              </div>
+            </mat-list-item>
 
-
-      <div class="form-actions">
-        <button mat-raised-button color="primary" type="submit">
-          <mat-icon>check_circle</mat-icon>
-          Add
-        </button>
+          </mat-list>
+        </div>
       </div>
-    </form>
 
-    <mat-divider></mat-divider>
+      <!-- Bouton retour -->
 
-    <div class="upload-section">
-      <label class="upload-label">
-        <mat-icon>upload_file</mat-icon>
-        Uploading files
-      </label>
+    </mat-card-content>
+    <mat-card-actions align="end" class="action">
+      <button mat-raised-button color="primary" [disabled]="!folderName.trim() || selectedFiles.length == 0"
+        (click)="createFolderAndUpload()">
+        <mat-icon>check_circle</mat-icon>
+        To validate
+      </button>
+      <button mat-button color="primary" (click)="router.navigate(['/tasks'])">Cancel</button>
+    </mat-card-actions>
 
-      <input type="file" multiple (change)="uploadFiles($event)" />
-
-      <div class="drop-zone" (drop)="handleDrop($event)" (dragover)="allowDrop($event)">
-        <mat-icon color="primary">cloud_upload</mat-icon>
-        Drag your files here
-      </div>
-    </div>
-  </mat-card-content>
-</mat-card>
+  </mat-card>
+</div>

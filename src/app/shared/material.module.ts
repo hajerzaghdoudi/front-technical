@@ -47,11 +47,11 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { DialogModule } from '@angular/cdk/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MAT_DATE_LOCALE, DateAdapter } from '@angular/material/core';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 
 @NgModule({
-  
+
   exports: [
     A11yModule,
     CdkAccordionModule,
@@ -101,13 +101,13 @@ import { MAT_DATE_LOCALE, DateAdapter } from '@angular/material/core';
     PortalModule,
     ScrollingModule,
     DialogModule,
-    MatFormFieldModule  ],
+    MatFormFieldModule],
   providers: [
-    
+
     //{ provide: MAT_DATE_LOCALE, useValue: 'fr' }
     { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' },
-   
-   
+
+
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

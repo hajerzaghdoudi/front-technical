@@ -1,106 +1,112 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { TaskService } from '../task.service';
 import { MaterialModule } from '../../../shared/material.module';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { FileUploadZoneComponent } from '../../../components/file-upload-zone/file-upload-zone.component';
 
 @Component({
   selector: 'ic-task-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, MaterialModule],
+  imports: [CommonModule, FormsModule, RouterModule, MaterialModule, FileUploadZoneComponent],
   templateUrl: './task-form.component.html',
   styleUrls: ['./task-form.component.scss']
 })
 export class TaskFormComponent {
-  name = '';
-  isFolder = true;
+  folderName = '';
   parentId: string | null = null;
-  uploadError: string | null = null
-  constructor(private taskService: TaskService, private router: Router, private route: ActivatedRoute,  private snackBar: MatSnackBar) {
-    this.route.queryParamMap.subscribe((params: any) => {
+  uploadError: string | null = null;
+  selectedFiles: File[] = [];
+  selectedFileLabel: string = 'Select file';
+  constructor(
+    private taskService: TaskService,
+    public router: Router,
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef,
+    private snackBar: MatSnackBar
+
+  ) {
+    this.route.queryParamMap.subscribe(params => {
       this.parentId = params.get('parentId');
     });
   }
 
-  submit() {
-    const newItem = {
-      name: this.name,
-      folder: this.isFolder,
-      parentId: this.parentId || undefined
-    };
-
-    this.taskService.createItem(newItem).subscribe({
-      next: () => this.router.navigate(['/tasks']),
-      error: err => console.error('Erreur création', err)
-    });
-  }
-
-  uploadFiles(event: any) {
-  this.uploadError = null;
-  const files = event.target.files;
-  const formData = new FormData();
-
-  for (let file of files) {
-    formData.append('files', file);
-  }
-
-  if (this.parentId) {
-    formData.append('parentId', this.parentId);
-  }
-
-  this.taskService.uploadFiles(formData).subscribe({
-    next: () => {
-      this.snackBar.open('✅ Upload completed', 'Close', {
-        duration: 3000,
-        panelClass: ['snackbar-success']
-      });
-      this.router.navigate(['/tasks']);
-    },
-    error: err => {
-      this.snackBar.open(`❌ ${err?.error?.errors[0].message}` , 'Close', {
-        duration: 4000,
-        panelClass: ['snackbar-error']
-      });
-    }
-  });
-}
   allowDrop(event: DragEvent) {
     event.preventDefault();
   }
 
+
+
+  onFileSelected(event: Event) {
+
+
+    const input = event.target as HTMLInputElement;
+    const files = input.files;
+    if (files && files.length > 0) {
+      this.selectedFileLabel = files.length === 1
+        ? files[0].name
+        : `${files.length} files selected`;
+    } else {
+      this.selectedFileLabel = 'No file selected';
+    }
+    if (files) {
+      this.selectedFiles = [...this.selectedFiles, ...files];
+      this.cdr.detectChanges();
+    }
+  }
+  deleteFile(index: any) {
+    this.selectedFiles.splice(index, 1);
+  }
   handleDrop(event: DragEvent) {
     event.preventDefault();
-    this.uploadError = null;
     const files = event.dataTransfer?.files;
-    if (!files) return;
+    if (files) {
+      this.selectedFiles = [...this.selectedFiles, ...files];
+      this.cdr.detectChanges();
+    }
+  }
 
-    const formData = new FormData();
-    for (let file of files) formData.append('files', file);
-    if (this.parentId) formData.append('parentId', this.parentId);
+  createFolderAndUpload() {
+    if (!this.folderName.trim() || this.selectedFiles.length === 0) {
+      this.uploadError = 'Veuillez entrer un nom de dossier et sélectionner des fichiers.';
+      return;
+    }
 
-    this.taskService.uploadFiles(formData).subscribe({
-      next: () => {
-        this.snackBar.open('✅ Upload completed', 'Close', {
-          duration: 3000,
-          panelClass: ['snackbar-success']
+    const newItem = {
+      name: this.folderName.trim(),
+      folder: true,
+      parentId: this.parentId || null
+    };
+
+    this.taskService.createItem(newItem).subscribe({
+      next: (res) => {
+        const folderId = res.item.id;
+        const formData = new FormData();
+        this.selectedFiles.forEach(file => formData.append('files', file));
+        formData.append('parentId', folderId);
+
+        this.taskService.uploadFiles(formData).subscribe({
+          next: () => this.router.navigate(['/tasks']),
+          error: err => this.uploadError = 'Erreur lors de l\'upload des fichiers.'
         });
-        this.router.navigate(['/tasks']);
       },
-      error: err => {
-        this.snackBar.open(`❌ ${err?.error?.errors[0].message}` , 'Close', {
-        duration: 4000,
-        panelClass: ['snackbar-error']
-      });
-      }
+      error: err => this.uploadError = 'Erreur lors de la création du dossier.'
     });
   }
+  onFilesReceived(files: File[]) {
+    this.selectedFiles = [...this.selectedFiles, ...files];
+    this.selectedFileLabel = files.length === 1
+      ? files[0].name
+      : `${files.length} files selected`;
+    this.cdr.detectChanges();
+  }
+
+
   getErrorMessage(err: any): string {
-    if (err.status === 409) {
-      return err.error?.desc || 'Conflit : nom déjà utilisé.';
-    }
-    if (err.status === 400) {
+    if (err.status === 409 || err.status === 400) {
       return err.error?.desc || 'Conflit : nom déjà utilisé.';
     }
     if (err.status === 413) {
@@ -111,4 +117,5 @@ export class TaskFormComponent {
     }
     return 'Erreur inconnue lors de l’upload.';
   }
+
 }

@@ -1,0 +1,11 @@
+<div class="upload-section drop-zone">
+	<label for="fileUpload" style="cursor: pointer;">
+		📁 Select file
+	</label>
+	<input id="fileUpload" type="file" multiple (change)="onFileSelected($event)" style="display: none;" />
+</div>
+
+<div class="drop-zone" (drop)="handleDrop($event)" (dragover)="allowDrop($event)">
+	<mat-icon>cloud_upload</mat-icon>
+	<p>Drag your files here to upload them</p>
+</div>

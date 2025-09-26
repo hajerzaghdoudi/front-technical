@@ -34,6 +34,7 @@ We suggest you don't spend too much time on your UI, we know how time intensive 
 
 If you have some time left and want to go a little bit further, here are some feature ideas you can add to this app:
 
+- Login page
 - Navigate inside folders
 - Use routing for navigation
 - Rename a file or folder
@@ -47,8 +48,10 @@ If you have some time left and want to go a little bit further, here are some fe
 ## Quick start
 
 ```
+Front :
 npm ci
 npm start
+
 ```
 
 ## Submission

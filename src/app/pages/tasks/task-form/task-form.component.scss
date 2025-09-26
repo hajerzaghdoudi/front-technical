@@ -1,0 +1,84 @@
+.full-width {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+ .title{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem;
+}
+
+.upload-section {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-family: Arial, sans-serif;
+}
+
+input[type="file"] {
+  margin-top: 0.5rem;
+}
+
+.actions {
+  margin-top: 1rem;
+}
+
+.error-message {
+  color: #d32f2f;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.card-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #fafafa;
+}
+
+.card {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.file-preview {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.list-container {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  max-height: 300px; // ou 100% si le parent a une hauteur fixe
+}
+.list{
+  height: 100% !important;
+}
+.file-name{
+  color: #666666;
+  font-size: 12px;
+}
+.list-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.file-name {
+  font-size: 14px;
+  font-weight: 500;
+}
+.upload{
+  margin-bottom: 2rem;
+}
+.action{
+  margin: 1rem;
+}

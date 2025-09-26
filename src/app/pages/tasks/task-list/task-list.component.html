@@ -1,0 +1,86 @@
+<div class="task-wrapper">
+  <!-- Barre de navigation (breadcrumb) -->
+  <nav class="breadcrumb" *ngIf="breadcrumb.length > 0">
+    <span *ngFor="let folder of breadcrumb; let last = last">
+      <a [routerLink]="['/tasks', folder.id]">{{ folder.name }}</a>
+      <span *ngIf="!last"> / </span>
+    </span>
+  </nav>
+
+  <!-- Barre d'outils -->
+  <mat-toolbar class="task-toolbar">
+    <span class="toolbar-title">
+      <mat-icon>folder</mat-icon>
+      File Manager
+    </span>
+    <span class="spacer"></span>
+
+    <!-- Créer un dossier dans une autre page -->
+    <label [routerLink]="['/tasks/new']" [queryParams]="{ parentId: parentId }" class="toolbar-title toolbar-title-btn">
+      <mat-icon>folder_open</mat-icon>
+      New folder
+    </label>
+  </mat-toolbar>
+
+
+
+  <!-- Barre de recherche -->
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Search for a filer</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="New folder" />
+  </mat-form-field>
+
+  <!-- Tableau des dossiers -->
+  <mat-card class="card">
+    <mat-card-title>📁 Files</mat-card-title>
+    <div class="table-container">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
+        <!-- ID -->
+        <ng-container matColumnDef="Id">
+          <th mat-header-cell *matHeaderCellDef>ID</th>
+          <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+        </ng-container>
+
+        <!-- Name -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef class="th-style">Nom</th>
+          <td mat-cell *matCellDef="let element" (click)="navigateToFolder(element.id)" class="clickable th-style">
+            {{ element.name }}
+          </td>
+        </ng-container>
+
+        <!-- File Number -->
+        <ng-container matColumnDef="fileCount">
+          <th mat-header-cell *matHeaderCellDef>Fichiers</th>
+          <td mat-cell *matCellDef="let element">
+            {{ countFilesInFolder(element.id) }}
+          </td>
+        </ng-container>
+
+        <!-- Actions -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-icon-button (click)="renameItem(element)">
+              <mat-icon color="primary">edit</mat-icon>
+            </button>
+            <button mat-icon-button (click)="moveItem(element)">
+              <mat-icon>drive_file_move</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteItemWithConfirmation(element.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button mat-icon-button color="accent" (click)="openFolderDetails(element)">
+              <mat-icon>info</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+  </mat-card>
+</div>

@@ -1,0 +1,47 @@
+<div class="card-wrapper">
+  <mat-card class="card">
+    <mat-card-title class="title"> <mat-icon color="primary" (click)="router.navigate(['/tasks'])">arrow_back</mat-icon>
+      Create a new folder</mat-card-title>
+    <mat-card-content class="upload">
+
+
+      <mat-form-field appearance="outline" class="full-width">
+
+        <mat-label>
+          Name
+        </mat-label>
+        <input matInput [(ngModel)]="folderName" />
+      </mat-form-field>
+
+      <ic-file-upload-zone (filesSelected)="onFilesReceived($event)"></ic-file-upload-zone>
+      <div *ngIf="selectedFiles.length > 0" class="file-preview list">
+        <p>{{ selectedFiles.length }} selected file(s):</p>
+        <div class="list-container">
+          <mat-list>
+            <mat-list-item *ngFor="let file of selectedFiles; let index = index" class="list">
+              <div class="list-row">
+                <div class="file-name">{{ file.name }} - {{ file.size }} octets</div>
+                <button mat-icon-button (click)="deleteFile(index)" matTooltip="Supprimer">
+                  <mat-icon color="warn">delete</mat-icon>
+                </button>
+              </div>
+            </mat-list-item>
+
+          </mat-list>
+        </div>
+      </div>
+
+      <!-- Bouton retour -->
+
+    </mat-card-content>
+    <mat-card-actions align="end" class="action">
+      <button mat-raised-button color="primary" [disabled]="!folderName.trim() || selectedFiles.length == 0"
+        (click)="createFolderAndUpload()">
+        <mat-icon>check_circle</mat-icon>
+        To validate
+      </button>
+      <button mat-button color="primary" (click)="router.navigate(['/tasks'])">Cancel</button>
+    </mat-card-actions>
+
+  </mat-card>
+</div>

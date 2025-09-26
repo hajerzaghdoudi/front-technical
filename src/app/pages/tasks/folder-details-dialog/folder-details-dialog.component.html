@@ -1,0 +1,108 @@
+<h2 mat-dialog-title class="title">File details </h2>
+
+<mat-dialog-content class="dialog-content">
+
+	<mat-card-title *ngIf="files.length > 0">📄 Files</mat-card-title>
+	<mat-list *ngIf="files.length > 0">
+		<mat-list-item *ngFor="let file of files">
+
+
+			<!-- Contenu aligné -->
+			<div matLine style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+				<!-- Nom du fichier à gauche -->
+				<span
+					style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; font-size: 14px">
+					<mat-icon matListIcon>insert_drive_file</mat-icon> {{ file.name }}
+				</span>
+
+				<!-- Boutons à droite -->
+				<span style="display: flex; gap: 4px;">
+					<button mat-icon-button (click)="downloadFile(file)" matTooltip="Télécharger">
+						<mat-icon>download</mat-icon>
+					</button>
+					<button mat-icon-button (click)="deleteFile(file)" matTooltip="Supprimer">
+						<mat-icon color="warn">delete</mat-icon>
+					</button>
+				</span>
+			</div>
+		</mat-list-item>
+
+	</mat-list>
+
+
+
+	<!-- 📁 Sous-dossiers (affichés uniquement si showSubfolders = true) -->
+	<mat-card-title *ngIf="subfolders.length > 0 && showSubfolders">📁 Sous-dossiers</mat-card-title>
+	<mat-list *ngIf="subfolders.length > 0 && showSubfolders">
+		<ng-container *ngFor="let folder of subfolders">
+			<!-- 📁 Sous-dossier -->
+			<mat-list-item class="folder-item">
+				<mat-icon matListIcon>folder</mat-icon>
+				<div class="file-details">
+					<div class="top-row">
+						<span class="file-name">{{ folder.name }}</span>
+						<span class="spacer"></span>
+						<button mat-button (click)="toggleSubfolderFiles(folder.id)">
+							{{ visibleSubfolderFiles[folder.id] ? 'Masquer les fichiers' : 'Afficher les fichiers' }}
+						</button>
+					</div>
+					<div class="bottom-row">
+						<span class="file-meta">Id : {{ folder.id }}</span>
+					</div>
+				</div>
+			</mat-list-item>
+
+			<!-- 📄 Fichiers du sous-dossier -->
+			<ng-container *ngIf="visibleSubfolderFiles[folder.id]">
+				<mat-list-item *ngFor="let file of subfolderFiles[folder.id]" class="file-item">
+					<mat-icon matListIcon>insert_drive_file</mat-icon>
+					<div class="file-details" style="width: 100%;">
+						<div class="top-row"
+							style="display: flex; align-items: center; justify-content: space-between; width: 100%; font-weight: 500; font-size: 14px;">
+
+							<!-- Nom du fichier à gauche -->
+							<div class="file-name"
+								style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+								{{ file.name }}
+							</div>
+
+							<!-- Boutons à droite -->
+							<div style="display: flex; gap: 4px; flex-shrink: 0;">
+								<button mat-icon-button (click)="downloadFile(file)" matTooltip="Télécharger">
+									<mat-icon>download</mat-icon>
+								</button>
+								<button mat-icon-button (click)="deleteFile(file)" matTooltip="Supprimer">
+									<mat-icon color="warn">delete</mat-icon>
+								</button>
+							</div>
+						</div>
+
+						<div class="bottom-row" style="font-size: 12px; color: #666; margin-top: 4px;">
+							<span class="file-meta">Id : {{ file.id }}</span><br>
+							<span class="file-meta">Path : {{ file.filePath }}</span><br>
+							<span class="file-meta">{{ file.size }} octets – {{ file.mimeType }}</span>
+						</div>
+					</div>
+
+				</mat-list-item>
+
+			</ng-container>
+		</ng-container>
+	</mat-list>
+
+	<div class="toggle-section" *ngIf="subfolders.length > 0">
+		<button mat-button (click)="toggleSubfolderView()">
+			{{ showSubfolders ? '❌ Hide subfolders' : '📁 Show subfolders' }}
+		</button>
+	</div>
+	<ic-file-upload-zone (filesSelected)="onFilesReceived($event)"></ic-file-upload-zone>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="action">
+	<button mat-raised-button color="primary" *ngIf="newFiles.length > 0" (click)="validateNewFiles()">
+		<mat-icon>check_circle</mat-icon>
+		Validate new files
+	</button>
+	<button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

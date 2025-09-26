@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+
+<mat-dialog-content>
+	<mat-form-field appearance="outline" class="full-width input_style">
+		<mat-label>{{ data.label }}</mat-label>
+		<input matInput [(ngModel)]="inputValue" />
+	</mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+	<button mat-button (click)="dialogRef.close()">Annuler</button>
+	<button mat-raised-button color="primary" (click)="dialogRef.close(inputValue)">Valider</button>
+</mat-dialog-actions>
